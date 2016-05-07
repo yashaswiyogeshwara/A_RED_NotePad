@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>A TextPad</title>
+    <script src ="jquery-1.12.3.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var table = document.getElementsByTagName("table");
+            console.log(table[0]);
+            table.width = "800px";
+            for (var i = 0; i < 10; i++) {
+
+                var tableRow = document.createElement("tr");
+                var tableCell = document.createElement("td");
+                 tableCell.id = i + "cell";
+                tableCell.contentEditable = true;
+                tableRow.appendChild(tableCell);
+                table[0].appendChild(tableRow);
+                if (!document.getElementById("tempDiv")) {
+                    var tempDiv = document.createElement("div");
+                    tempDiv.id = "tempDiv";
+                    document.body.appendChild(tempDiv);
+                } else {
+                    tempDiv.innerHTML = "";
+                }
+                tableCell.onkeydown = function() {
+                    debugger;
+                    var cell = document.activeElement;
+                    console.log(cell);
+                    document.getElementById("tempDiv").innerHTML = cell.innerHTML;
+                    var key = event.keyCode || event.charCode;
+                    var id = parseInt(cell.id);
+
+                    if (key === 13) {
+                        return false;
+                        //                      if (id < 10) {
+                        //                          var reqCell = document.getElementById((id + 1) + "cell");
+                        //                          reqCell.focus();
+
+                        //                          document.execCommand('insertHTML', false, '');
+                        //                          //reqCell.innerHTML = "";
+                        //                          reqCell.focus();
+                        //// ######### Know why is the below syntax wrong !!!
+                        //                          //reqCell.removeChild(reqCell.childNodes[0]);
+                        //                          //reqCell.focus();
+                        //                      } else {
+                        //                          return;
+                        //                      }
+                    }
+
+                    if (key === 8 || key === 46) {
+                        if (cell.innerHTML.length === 0) {
+                            if (id === 0) {
+                                return;
+                            } else {
+                                var reqCell = document.getElementById((id - 1) + "cell");
+                                reqCell.focus();
+                                var range = document.createRange();
+                                range.setStart(reqCell.childNodes[0], reqCell.innerHTML.length);
+                                range.collapse(true);
+                                var selection = window.getSelection();
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                                reqCell.focus();
+                            }
+                        } else {
+                            return
+                        }
+
+                    }
+                    if (id < 9) {
+                        if (document.getElementById("tempDiv").offsetWidth > 760) {
+                            var reqCell = document.getElementById((id + 1) + "cell");
+                            reqCell.focus();
+                        }
+                    } else if (id === 9 && document.getElementById("tempDiv").offsetWidth > 760) {
+                        debugger;
+                        return false;
+                    }
+
+                }
+                var focusCell = document.activeElement;
+            }
+            debugger;
+            
+        });
+        
+    </script>
+    <style>
+        div {
+        width: auto;
+        height: 35px;
+            font-size: 25px;
+        }
+
+        td {
+            border-width: 0px 0px 2px 0px;
+            border-style: solid;
+            display: table-cell;
+            width: 800px;
+            height:35px;
+            margin: 0px 0px 10px 0px;
+            /*max-width:800px;*/
+            font-size:25px;
+            white-space: pre-wrap;
+        }
+        table {
+            display : table;
+            border-width: 2px 2px 2px 2px;
+            border-style: solid;
+            table-layout:fixed;
+            width:800px;
+        }
+
+        tr {
+             display: table-row;
+             height:15px;
+        }
+
+        #tempDiv {
+            visibility: hidden;
+            width: auto;
+            position: absolute;
+            white-space: nowrap;
+        }
+
+        *:focus  {
+        outline: none;
+        } 
+        
+    </style>
+</head>
+<body>
+<table>
+    
+</table>
+</body>
+</html>
